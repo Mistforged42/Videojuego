@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from app.db.base import Base
+from app.db.base import Base  # ✅ usa el Base centralizado
 
 class Routine(Base):
     __tablename__ = "routines"
