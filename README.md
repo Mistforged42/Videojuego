@@ -7,5 +7,9 @@ MVP:
 - Rutinas guiadas y Oracle microjuego
 - Habits, streaks, XP y tienda cosmetica
 
+## Documentación
+- [API Contract](./API_CONTRACT.md)
+
+
 Cómo ejecutar mock:
 python services/api/mock_server.py
