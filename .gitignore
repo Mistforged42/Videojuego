@@ -1,4 +1,30 @@
-﻿__pycache__/
-.env
-node_modules/
+# Entorno virtual
+venv/
+backend/venv/
+
+# Archivos de Python compilados
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos de logs y bases de datos locales
+*.log
+*.sqlite3
+data.db
+
+# Configuración de VSCode y otros IDEs
 .vscode/
+.idea/
+
+# Archivos de entorno
+.env
+*.env
+
+# Archivos de cobertura y pruebas
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Archivos de despliegue temporales
+.DS_Store

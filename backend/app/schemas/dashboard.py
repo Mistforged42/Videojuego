@@ -7,7 +7,7 @@ class RoutineOut(BaseModel):
     duration: str
 
     class Config:
-    from_attributes = True
+        from_attributes = True
 
 class UserOut(BaseModel):
     name: str
