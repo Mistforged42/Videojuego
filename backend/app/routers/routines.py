@@ -27,20 +27,23 @@ def get_routines(db: Session = Depends(get_db)) -> Dict[str, List[RoutineOut]]:
 
 # ------------------- COMPLETAR RUTINA -------------------
 @router.post("/{routine_id}/complete")
-def complete_routine(routine_id: int, user_name: str, db: Session = Depends(get_db)):
-    # buscar usuario
-    user = db.query(User).filter(User.name == user_name).first()
+def complete_routine(routine_id: int, user_uid: str, db: Session = Depends(get_db)):
+    # buscar usuario por uid
+    user = db.query(User).filter(User.uid == user_uid).first()
     if not user:
-        return {"error": f"Usuario {user_name} no encontrado"}
+        return {"error": f"Usuario {user_uid} no encontrado"}
+
 
     # verificar rutina
     routine = db.query(Routine).filter(Routine.id == routine_id).first()
     if not routine:
         return {"error": f"Rutina {routine_id} no encontrada"}
 
+
     # registrar progreso
-    progress = Progress(user_id=user.id, routine_id=routine.id)
+    progress = Progress(user_uid=user.uid, routine_id=routine.id)  # ✅ usar user_uid
     db.add(progress)
+
 
     # dar XP por rutina
     user.xp += 10

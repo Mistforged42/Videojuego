@@ -2,14 +2,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 # ------------------- BASE DE DATOS -------------------
-from app.db.session import engine
-from app.db.base import Base
+from app.db.session import engine  # engine ya crea tablas en session.py
 
 # ------------------- ROUTERS -------------------
 from app.routers.dashboard import router as dashboard_router
 from app.routers.routines import router as routines_router
 from app.routers.oracle import router as oracle_router
-# aquí puedes agregar más routers en el futuro (ej: auth, admin, etc.)
+from app.routers.profile import router as profile_router
+from app.routers.progress import router as progress_router
 
 # ------------------- CONFIGURACIÓN DE LA APP -------------------
 app = FastAPI(
@@ -20,9 +20,9 @@ app = FastAPI(
 
 # ------------------- CORS -------------------
 origins = [
-    "http://localhost:3000",   # frontend local
-    "http://127.0.0.1:3000",   # otra forma de acceder al frontend
-    "*"                        # abierto a todos (puedes restringir más adelante)
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "*"
 ]
 
 app.add_middleware(
@@ -33,13 +33,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ------------------- EVENTOS -------------------
-@app.on_event("startup")
-def on_startup():
-    """Crear tablas automáticamente al iniciar la aplicación."""
-    Base.metadata.create_all(bind=engine)
-
 # ------------------- REGISTRO DE ROUTERS -------------------
 app.include_router(dashboard_router)
 app.include_router(routines_router)
 app.include_router(oracle_router)
+app.include_router(profile_router)
+app.include_router(progress_router)
