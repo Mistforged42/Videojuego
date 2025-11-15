@@ -1,137 +1,111 @@
-```markdown
-# API Contract – Proyecto Videojuego
-```
-Base URL: https://videojuego-backend-3kce.onrender.com
+📜 API Contract – Proyecto Videojuego (Actualizado)
+Base URL:
 
----
+Código
+https://videojuego-backend-3kce.onrender.com
+General
+Formato de respuesta: JSON
 
-### General
-- Formato de respuesta: JSON
-- Autenticación: No requerida (actualmente)
-- Versionado: Todos los endpoints están bajo /v1/
+Autenticación: Header Authorization: Bearer <user_uid>
 
----
+Versionado: Todos los endpoints bajo /v1/
 
-## Endpoints
-
-### GET /v1/routines/
-**Descripción:** Lista todas las rutinas disponibles.
-
-**Ejemplo de llamada:**
-GET https://videojuego-backend-3kce.onrender.com/v1/routines/
-
-**Respuesta:**
-```json
-[
-  { "id": 1, "name": "Rutina Básica", "duration": 15 },
-  { "id": 2, "name": "Rutina Avanzada", "duration": 30 }
-]
-GET /v1/dashboard/
-Descripción: Devuelve el progreso y la rutina asociada a un usuario.
-
-Parámetros (query):
-
-user_name (string, requerido)
-
-Ejemplo de llamada: GET https://videojuego-backend-3kce.onrender.com/v1/dashboard/?user_name=Ornella
+👤 Perfil de Usuario
+GET /v1/profile
+Descripción: Obtiene el perfil del usuario autenticado.
 
 Respuesta:
 
 json
 {
-  "user_name": "Ornella",
-  "progress": 75,
-  "routine": { "id": 2, "name": "Rutina Avanzada", "duration": 30 }
+  "uid": "Mig",
+  "email": "mig@example.com",
+  "avatar": "url_avatar",
+  "xp": 120,
+  "level": 3
 }
-GET /v1/oracle/
-Descripción: Devuelve un consejo o mensaje motivacional aleatorio.
+Frontend: Botón “Ver perfil”.
 
-Ejemplo de llamada: GET https://videojuego-backend-3kce.onrender.com/v1/oracle/
+📋 Rutinas
+GET /v1/routines/
+Descripción: Lista todas las rutinas disponibles.
 
 Respuesta:
-
+```
 json
-{ "message": "Recuerda que cada paso cuenta hacia tu meta." }
+[
+  {"id": 1, "title": "Cardio rápido", "duration": "15m"},
+  {"id": 2, "title": "Yoga básico", "duration": "20m"}
+]
+```
+Frontend: Pantalla de catálogo con botón “Iniciar rutina”.
+
 POST /v1/routines/
 Descripción: Crea una nueva rutina.
 
-Body (JSON):
+Body:
 
+```
 json
-{ "name": "Rutina Personalizada", "duration": 20 }
-Ejemplo de llamada: POST https://videojuego-backend-3kce.onrender.com/v1/routines/ Content-Type: application/json
+{"title": "Entrenamiento fuerza", "duration": "30m"}
+```
+Respuesta:
+```
+json
+{"id": 3, "title": "Entrenamiento fuerza", "duration": "30m"}
+```
+Frontend: Botón “Crear rutina” con formulario.
+
+POST /v1/routines/{id}/complete?user_uid=<uid>
+Descripción: Marca una rutina como completada.
 
 Respuesta:
-
-json
-{ "id": 3, "name": "Rutina Personalizada", "duration": 20 }
-Notas para frontend
-Ejemplo en React:
-
-javascript
-fetch("https://videojuego-backend-3kce.onrender.com/v1/dashboard/?user_name=Ornella")
-  .then(res => res.json())
-  .then(data => console.log(data));
 ```
+json
+{"status": "ok", "routine_id": 1, "user_uid": "Mig"}
+```
+Frontend: Botón “Completar rutina”.
 
----
+📈 Progreso
+GET /v1/progress/
+Descripción: Lista rutinas completadas por el usuario.
 
-### GET /v1/dashboard/
-**Descripción:** Devuelve el progreso y la rutina asociada a un usuario.
+Respuesta:
+```
+json
+[
+  {"id": 10, "user_uid": "Mig", "routine_id": 1},
+  {"id": 11, "user_uid": "Mig", "routine_id": 2}
+]
+```
+Frontend: Pantalla de historial.
 
-**Parámetros (query):**
-- user_name (string, requerido)
+📊 Dashboard
+GET /v1/dashboard
+Descripción: Resumen del usuario + rutinas completadas y disponibles.
 
-**Ejemplo de llamada:**
-GET https://videojuego-backend-3kce.onrender.com/v1/dashboard/?user_name=Ornella
-
-**Respuesta:**
-```json
+Respuesta:
+```
+json
 {
-  "user_name": "Ornella",
-  "progress": 75,
-  "routine": { "id": 2, "name": "Rutina Avanzada", "duration": 30 }
+  "user": {"name": "Mig", "level": 3, "xp": 120, "xp_needed": 200},
+  "completed_routines": [
+    {"id": 1, "title": "Cardio rápido", "duration": "15m"}
+  ],
+  "available_routines": [
+    {"id": 2, "title": "Yoga básico", "duration": "20m"}
+  ]
 }
 ```
+Frontend: Pantalla principal con progreso y sugerencias.
 
----
+🔮 Oracle
+GET /v1/oracle/
+Descripción: Devuelve un consejo motivacional aleatorio.
 
-### GET /v1/oracle/
-**Descripción:** Devuelve un consejo o mensaje motivacional aleatorio.
-
-**Ejemplo de llamada:**
-GET https://videojuego-backend-3kce.onrender.com/v1/oracle/
-
-**Respuesta:**
-```json
-{ "message": "Recuerda que cada paso cuenta hacia tu meta." }
+Respuesta:
 ```
-
----
-
-### POST /v1/routines/
-**Descripción:** Crea una nueva rutina.
-
-**Body (JSON):**
-```json
-{ "name": "Rutina Personalizada", "duration": 20 }
+json
+{"message": "Recuerda que cada paso cuenta hacia tu meta."}
 ```
-
-**Ejemplo de llamada:**
-POST https://videojuego-backend-3kce.onrender.com/v1/routines/  
-Content-Type: application/json
-
-**Respuesta:**
-```json
-{ "id": 3, "name": "Rutina Personalizada", "duration": 20 }
-```
-
----
-
-## Notas para frontend
-Ejemplo en React:
-```javascript
-fetch("https://videojuego-backend-3kce.onrender.com/v1/dashboard/?user_name=Ornella")
-  .then(res => res.json())
-  .then(data => console.log(data));
-```
+Frontend: Botón “Consejo del día”.
